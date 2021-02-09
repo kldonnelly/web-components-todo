@@ -4,7 +4,7 @@
   </form>
 </template>
 <script>
-module.exports = {
+export default {
   name: 'TodoInput',
   data() {
     return { text: '' };

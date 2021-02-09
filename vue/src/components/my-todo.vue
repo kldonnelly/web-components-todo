@@ -1,38 +1,105 @@
 <template>
   <div>
-    <h1>Todos Vue</h1>
+    <h3>Todos Vue</h3>
     <section>
-      <vue-todo-input @onsubmit="handleOnSubmit"></vue-todo-input>
+      <TodoInput v-if="edit" @onsubmit="handleOnSubmit"></TodoInput>
       <ul id="list-container">
-        <vue-todo-item v-for="(item, index) in list" :key="item.value" :index="index" :checked="item.checked" :text="item.text" @onremove="handleRemove" @ontoggle="handleToggle"></vue-todo-item>
+        <TodoItem
+          v-for="(item, index) in list"
+          :key="item.key"
+          :index="index"
+          :checked="item.checked"
+          :todo="item.ToDo"
+          :_key="item._key"
+          :edit="edit"
+          :selected="item.selected"
+          :image="item.Image"
+          @onremove="handleRemove"
+          @ontoggle="handleToggle"
+          @onselected="handleSelected"
+          @ontextchanged="handletextchanged"
+          @onedit="handleedit"
+        ></TodoItem>
       </ul>
     </section>
   </div>
 </template>
 
 <script>
-module.exports = {
-  name: 'MyTodo',
+import TodoItem from './todo-item.vue';
+import TodoInput from './todo-input.vue';
+
+export default {
+  name: "MyTodo",
+  props: ["edit"],
+  inject: ["FirebaseCrud"],
+  components: { TodoItem, TodoInput },
   data() {
     return {
-      list: [
-        { text: 'my initial todo', checked: false },
-        { text: 'Learn about Web Components', checked: true },
-      ],
+      list: this.FirebaseCrud.list,
     };
   },
   methods: {
     handleOnSubmit(e) {
-      this.list = [...this.list, { text: e.detail[0], checked: false }];
+      //  this.list = [...this.list, { text: e.detail[0], checked: false }];
+      console.log(e);
+      this.FirebaseCrud.Create(
+        { ToDo: e, checked: false },
+        (key) => {
+          console.log(key);
+        }
+      );
     },
     handleToggle(e) {
-      const index = parseInt(e.detail[0]);
-      const item = this.list[index];
-      this.$set(this.list[index], 'checked', !item.checked);
+      var item = {};
+
+      for (var i = this.list.length - 1; i >= 0; i--) {
+        if (this.list[i]._key === e) {
+          item.checked = !this.list[i].checked;
+          this.FirebaseCrud.Update(e, item, () => {
+            this.$set(this.list[i], "checked", item.checked);
+          });
+          break;
+        }
+      }
+    },
+    handleSelected(e) {
+      console.log("handleSelected " + e);
+      var item = {};
+      for (var i = this.list.length - 1; i >= 0; i--) {
+        if (this.list[i]._key === e) {
+          item.selected = true;
+        } else {
+          item.selected = false;
+        }
+        this.$set(this.list[i], "selected", item.selected);
+      }
+    },
+    handletextchanged(e) {
+      console.log("handletextchanged ");
+      console.log(e);
+      var item = {};
+
+      for (var i = this.list.length - 1; i >= 0; i--) {
+        if (this.list[i]._key === e.key) {
+          item.ToDo = e.ToDo;
+          this.FirebaseCrud.Update(e.key, item, () => {
+            this.$set(this.list[i], "ToDo", item.ToDo);
+          });
+          break;
+        }
+      }
     },
     handleRemove(e) {
-      const index = parseInt(e.detail[0]);
-      this.list = [...this.list.slice(0, index), ...this.list.slice(index + 1)];
+      //  const index = parseInt(e.detail[0]);
+      //this.list = [...this.list.slice(0, index), ...this.list.slice(index + 1)];
+      console.log("handleRemove " + e);
+      this.FirebaseCrud.Delete(e, () => {
+        console.log(this.FirebaseCrud.list);
+      });
+    },
+    handleedit(e) {
+      this.$emit("onhandledit", e);
     },
   },
 };

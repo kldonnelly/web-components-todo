@@ -1,4 +1,6 @@
+
 module.exports = {
-  lintOnSave: true,
+ lintOnSave: true,
   baseUrl: '/vue/'
 }
+

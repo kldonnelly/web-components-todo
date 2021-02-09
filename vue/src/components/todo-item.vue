@@ -1,36 +1,83 @@
 <template>
-  <li :class="['item', {'completed':checked}]">
-    <input type="checkbox" :checked="checked" @click="handleOnToggle" />
-    <label>{{text}}</label>
-    <button class="destroy" @click="handleOnRemove">x</button>
+  <li
+    :class="['item', { completed: checked }, { selected: selected }]"
+    :style="{ backgroundImage: 'url(' + image + ')' }"
+    @click="handleFocus"
+  >
+    <v-btn v-if="edit" tile outlined color="#00FF00" @click="handleedit">
+      <v-icon left>{{ svgPath }}</v-icon
+      >Edit
+    </v-btn>
+
+    <input
+      v-if="edit"
+      type="checkbox"
+      :checked="checked"
+      @click="handleOnToggle"
+    />
+    <label :contenteditable="edit" @blur="handleOnTextChanged">{{
+      todo
+    }}</label>
+    <button v-if="edit" class="destroy" @click="handleOnRemove">x</button>
   </li>
 </template>
 
 <script>
-module.exports = {
-  name: 'TodoItem',
-  props: ['index', 'text', 'checked'],
+//import Vuetify from "vuetify";
+//import Vue from "vue";
+//Vue.use(Vuetify);
+
+import { VIcon, VBtn } from "vuetify/lib";
+import { mdiPencil } from "@mdi/js";
+import colors from "vuetify/lib/util/colors";
+
+export default {
+  name: "TodoItem",
+  props: ["index", "todo", "checked", "selected", "_key", "edit", "image"],
+  components: {
+    VBtn,
+    VIcon,
+  },
+  data: () => ({
+    svgPath: mdiPencil,
+  }),
   methods: {
     handleOnRemove() {
-      this.$emit('onremove', this.index);
+      this.$emit("onremove", this._key);
     },
     handleOnToggle() {
-      this.$emit('ontoggle', this.index);
+      this.$emit("ontoggle", this._key);
+    },
+    handleFocus() {
+      this.$emit("onselected", this._key);
+    },
+    handleOnTextChanged(e) {
+      this.$emit("ontextchanged", { key: this._key, ToDo: e.target.innerText });
+    },
+    handleedit() {
+      this.$emit("onedit", this._key);
     },
   },
 };
 </script>
-
+<style src="../../node_modules/vuetify/dist/vuetify.min.css"></style>
+<style src="../../node_modules/@mdi/font/css/materialdesignicons.min.css"></style>
 <style>
 :host {
   display: block;
 }
 
 li.item {
+  height: 180px;
   font-size: 24px;
   display: block;
   position: relative;
-  border-bottom: 1px solid #ededed;
+  border: 5px #ddd;
+  background-size: 100%;
+}
+
+li.item.selected {
+  border-style: solid;
 }
 
 li.item input {
@@ -72,7 +119,7 @@ li.item.completed label {
 }
 
 li.item button,
-li.item input[type='checkbox'] {
+li.item input[type="checkbox"] {
   outline: none;
 }
 

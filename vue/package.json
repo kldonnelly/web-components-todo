@@ -1,21 +1,35 @@
 {
-  "name": "vue-web-component-wrapper",
-  "version": "0.1.0",
-  "private": true,
+  "name": "@kevinldonnelly/vue-web-component-wrapper",
+  "version": "0.2.3",
   "scripts": {
     "start": "vue-cli-service serve --open",
     "build": "npm run build:wc && cp index.html dist/ && rm dist/demo.html",
-    "build:wc": "vue-cli-service build --target wc --name vue 'src/components/*.vue'",
+    "build:wc": "vue-cli-service build --target wc --name vue-todo 'src/components/my-todocrud.vue'",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "vue": "^2.5.13"
+    "@kevinldonnelly/firebase-signin": "0.0.2",
+    "@kevinldonnelly/signin-google": "^1.0.7",
+    "@kevinldonnelly/storage-view-controllers": "^0.3.7",
+    "@mdi/font": "^5.8.55",
+    "@mdi/js": "^5.8.55",
+    "@vue/web-component-wrapper": "^1.2.0",
+    "firebase": "^8.0.2",
+    "stylus-loader": "^4.3.1",
+    "vue": "^2.5.13",
+    "vue-material-design-icons": "^4.11.0",
+    "vue-mdi": "^1.0.0",
+    "vuetify": "^2.3.21",
+    "vuetify-loader": "^1.6.0"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^3.0.0-alpha.11",
-    "@vue/cli-plugin-eslint": "^3.0.0-alpha.11",
-    "@vue/cli-service": "^3.0.0-alpha.11",
-    "vue-template-compiler": "^2.5.13"
+    "@vue/cli-plugin-babel": "^3.12.1",
+    "@vue/cli-plugin-eslint": "^3.12.1",
+    "@vue/cli-service": "^3.12.1",
+    "deepmerge": "^4.2.2",
+    "sass": "^1.30.0",
+    "sass-loader": "^10.1.0",
+    "vue-template-compiler": "^2.6.12"
   },
   "babel": {
     "presets": [
@@ -27,7 +41,8 @@
     "extends": [
       "plugin:vue/essential",
       "eslint:recommended"
-    ]
+    ],
+    "rules": {}
   },
   "postcss": {
     "plugins": {
