@@ -10,18 +10,18 @@
       <div>{{ lbemail }}</div>
       <div>{{ lbUID }}</div>
     </div>
-    <firebase-signin
+  <!--  <firebase-signin
       :config.prop="firebase_config"
       :signin.prop="firebase_signin"
       @onchange="firebase_onchange"
       @onsignin="firebase_onsignin"
     ></firebase-signin>
-    <signin-google
+   <signin-google
       profile="https://www.googleapis.com/auth/drive"
       client_id="629054288068-2fmfb0cjgd3cuf3995a993m93rqs4nld.apps.googleusercontent.com"
       :signin.prop="google_signin"
       @onchange="google_onchange"
-    ></signin-google>
+    ></signin-google> -->
     <MyTodo :edit="edit" @onhandledit="handleedit"></MyTodo>
     <modal v-show="isModalVisible" @close="closeModal">
       <h3 slot="header">Select a File</h3>
@@ -57,7 +57,7 @@ customElements.define("upload-view", StorageUploadView);
 
 //FirebaseCrudTodo.prototype.uuu
 //var FirebaseCrudTodo = new FirebaseCrud("Todos","default");
-var FirebaseCrud = new Crud("Todos", "default");
+var FirebaseCrud = new Crud("Todos", "default","Kevin Donnelly");
 
 export default {
   name: "MyTodoCrud",
@@ -71,7 +71,7 @@ export default {
       isModalVisible: false,
       lbluser: "",
       firebase_signin: "none",
-      google_signin: false,
+   //   google_signin: false,
       signin_provider: "Google",
       lbemail: "nobody",
       lbUID: "0",
@@ -125,8 +125,8 @@ export default {
     },
     signon: function () {
       console.log("signon button clicked");
-      this.google_signin = !this.google_signin;
-      //  this.firebase_signin = this.signin_provider;
+     // this.google_signin = !this.google_signin;
+        this.firebase_signin = this.signin_provider;
     },
     firebase_onchange: function (event) {
       console.log(`firebase_onchange`);

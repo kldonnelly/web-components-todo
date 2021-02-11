@@ -8,17 +8,17 @@ var CrudInterface = {
     Delete: required,
 };
 
-function Crud(collection, list) {
-   
+function Crud(collection, list, user) {
+
     this.config = {};
     this.collection = collection;
     this.list_name = list;
-    this.user = "Kevin Donnelly";
-    this.path = "/users/Kevin Donnelly";
+    this.user = user;
+    this.path = `/users/${user}`;
     this.home = "displayName";
 
 };
 
 Crud.prototype = Object.create(CrudInterface); // inherit
 
-export {CrudInterface,Crud };
+export { CrudInterface, Crud };
